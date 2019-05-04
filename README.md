@@ -35,10 +35,11 @@ continue bubbling a `keydown` event to the site instead of blurring), e.g.
           ...
 ```
 
-**Vanilla Vimium solution:** As described in [this Vimium
-issue][vimium-issue-2889] and [Vimium Tips and Tricks][vimium-tips], another
-solution to this issue is to use the built-in `passNextKey` command and press
-something like `<c-[><esc>`.
+**Vanilla Vimium solution:** As described in [Vimium Tips and
+Tricks][vimium-tips], another solution to this issue is to use the built-in
+`passNextKey` command and press something like `<c-[><esc>`. (You can find
+more discussion of this by searching Vimium's issues for e.g. "escape",
+"passNextKey")
 
 ## Changelog
 
@@ -48,5 +49,4 @@ something like `<c-[><esc>`.
 - v0.1.0: Vimium 1.64.5 with fix.
 
 
-[vimium-issue-2889]: https://github.com/philc/vimium/issues/2889
 [vimium-tips]: https://github.com/philc/vimium/wiki/Tips-and-Tricks#using-the-escape-key-in-inputs
