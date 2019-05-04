@@ -1,52 +1,52 @@
-# Pandu's Vimium fork
+# Pandu's Vimium fork (site-specific Esc behavior)
 
 ([Original readme](./ORIGINAL_README.md))
 
-TODO update readme for v0.1.1+
+**Problem:** Vimium uses Esc to blur `<input>`s and other focusable elements.
+This works well to go from insert mode to normal mode, but some websites have
+their own Esc handlers that get clobbered by Vimium (e.g. closing chat tabs on
+Facebook).
 
-To "fix" a bug with Vimium + Slack. This is not the right way of fixing this
-bug.
-
-**The bug:**
-- Open Slack in browser with Vimium installed.
-- Press cmd-k (on Mac) to open the channel/DM/etc search.
-- Press esc to try to close the search.
-  - Expected behavior: The search will close (as it does without Vimium)
-  - Actual behavior: The search does not close
-
-[**The fix:**][fix-commit] When handling an esc press in insert mode, if the
-active element seems to be the search box, use Vimium's `@continueBubbling`.
+**My solution:** Add site-specific exceptions (where we tell Vimium to
+continue bubbling a `keydown` event to the site instead of blurring), e.g.
 
 ```diff
++ # Returns true if should bubble to site's esc handler.
++ # Returns false if should let Vimium do its thing (blur if focusable, ...)
++ shouldContinueBubbling = (activeElement) ->
++   # Facebook -----------------------------------------------------------------
++   # - Should return true for chat input
++   # - Should return false for other inputs
++   isNoTranslate = activeElement.classList.contains('notranslate')
++   isChat = hasAncestorWithId(activeElement, 'ChatTabsPagelet')
++   if isNoTranslate and isChat
++     return true
++   false
+
   class InsertMode extends Mode
     constructor: (options = {}) ->
       ...
       handleKeyEvent = (event) =>
         ...
         else if event.type == 'keydown' and KeyboardUtils.isEscape(event)
-+         # ql-editor is a class shared by both the 'type a message' box and the 'find a channel/dm/etc' box
-+         # we only want to continue bubbling for the latter. for the former, we want vimium to unfocus the
-+         # box so that the user can activate link hints mode with f (or whatever key)
-+         if activeElement.classList.contains('ql-editor') and activeElement.parentElement.id != 'msg_input'
++         if shouldContinueBubbling activeElement
 +           return @continueBubbling
-        ...
+          activeElement.blur() if DomUtils.isFocusable activeElement
+          ...
 ```
 
-**The main limitations:**
-- The "seems to be the search box" logic is messy as described in the comment
-  above.
-  - Probably there are other `.ql-editor`s aside from the two I found.
-  - If Slack changes implementation details I'm depending on, my fix will
-    break.
-- I think other manifestations of this bug exist in other places (in Slack and
-  in other webapps too, probably), too. Since this fix is so specific, it
-  obviously doesn't apply to the other manifestations.
+**Vanilla Vimium solution:** As described in [this Vimium
+issue][vimium-issue-2889] and [Vimium Tips and Tricks][vimium-tips], another
+solution to this issue is to use the built-in `passNextKey` command and press
+something like `<c-[><esc>`.
 
 ## Changelog
 
+- v0.1.3: Rename `bubbleWhitelistContains` -> `shouldContinueBubbling`.
 - v0.1.2: Add Facebook rule, refactor Slack rule.
 - v0.1.1: Refactor to make it easier to use this fix for other places & sites.
 - v0.1.0: Vimium 1.64.5 with fix.
 
 
-[fix-commit]: https://github.com/prendradjaja/vimium/commit/739211d70b7ca97015aeaa1ae31fc3470348282c
+[vimium-issue-2889]: https://github.com/philc/vimium/issues/2889
+[vimium-tips]: https://github.com/philc/vimium/wiki/Tips-and-Tricks#using-the-escape-key-in-inputs

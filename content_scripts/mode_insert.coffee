@@ -8,7 +8,7 @@ hasAncestorWithId = (element, id) ->
 
 # Returns true if should bubble to site's esc handler.
 # Returns false if should let Vimium do its thing (blur if focusable, ...)
-bubbleWhitelistContains = (activeElement) ->
+shouldContinueBubbling = (activeElement) ->
   # TODO Check domain
 
   # Slack --------------------------------------------------------------------
@@ -27,6 +27,8 @@ bubbleWhitelistContains = (activeElement) ->
   isNewPost = hasAncestorWithId(activeElement, 'pagelet_composer')
   if isNoTranslate and (isChat or isNewPost)
     return true
+
+  # (add more site-specific rules here)
 
   false
 
@@ -51,7 +53,7 @@ class InsertMode extends Mode
         new PassNextKeyMode
 
       else if event.type == 'keydown' and KeyboardUtils.isEscape(event)
-        if bubbleWhitelistContains activeElement
+        if shouldContinueBubbling activeElement
           return @continueBubbling
         activeElement.blur() if DomUtils.isFocusable activeElement
         @exit() unless @permanent
