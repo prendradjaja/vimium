@@ -12,7 +12,7 @@ bug.
   - Expected behavior: The search will close (as it does without Vimium)
   - Actual behavior: The search does not close
 
-**The fix:** (739211d) When handling an esc press in insert mode, if the
+[**The fix:**][fix-commit] When handling an esc press in insert mode, if the
 active element seems to be the search box, use Vimium's `@continueBubbling`.
 
 ```diff
@@ -43,3 +43,6 @@ active element seems to be the search box, use Vimium's `@continueBubbling`.
 ## Changelog
 
 - v0.1.0: Vimium 1.64.5 with fix.
+
+
+[fix-commit]: https://github.com/prendradjaja/vimium/commit/739211d70b7ca97015aeaa1ae31fc3470348282c
