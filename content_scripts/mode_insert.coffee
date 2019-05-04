@@ -20,6 +20,11 @@ class InsertMode extends Mode
         new PassNextKeyMode
 
       else if event.type == 'keydown' and KeyboardUtils.isEscape(event)
+        # ql-editor is a class shared by both the 'type a message' box and the 'find a channel/dm/etc' box
+        # we only want to continue bubbling for the latter. for the former, we want vimium to unfocus the
+        # box so that the user can activate link hints mode with f (or whatever key)
+        if activeElement.classList.contains('ql-editor') and activeElement.parentElement.id != 'msg_input'
+          return @continueBubbling
         activeElement.blur() if DomUtils.isFocusable activeElement
         @exit() unless @permanent
 

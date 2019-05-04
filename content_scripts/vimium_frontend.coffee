@@ -161,7 +161,11 @@ installListeners = Utils.makeIdempotent ->
   # Key event handlers fire on window before they do on document. Prefer window for key events so the page
   # can't set handlers to grab the keys before us.
   for type in ["keydown", "keypress", "keyup", "click", "focus", "blur", "mousedown", "scroll"]
-    do (type) -> installListener window, type, (event) -> handlerStack.bubbleEvent type, event
+    do (type) -> installListener window, type, (event) ->
+      # uncomment this bit if you need to debug
+      # if type == 'keydown' && event && event.key && event.key == 'Escape'
+      #   debugger
+      handlerStack.bubbleEvent type, event
   installListener document, "DOMActivate", (event) -> handlerStack.bubbleEvent 'DOMActivate', event
 
 #
