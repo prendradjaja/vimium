@@ -1,8 +1,8 @@
-# Vimium fork for Slack
+# Pandu's Vimium fork
 
 ([Original readme](./ORIGINAL_README.md))
 
-TODO update readme for v0.1.1
+TODO update readme for v0.1.1+
 
 To "fix" a bug with Vimium + Slack. This is not the right way of fixing this
 bug.
@@ -44,6 +44,7 @@ active element seems to be the search box, use Vimium's `@continueBubbling`.
 
 ## Changelog
 
+- v0.1.2: Add Facebook rule, refactor Slack rule.
 - v0.1.1: Refactor to make it easier to use this fix for other places & sites.
 - v0.1.0: Vimium 1.64.5 with fix.
 

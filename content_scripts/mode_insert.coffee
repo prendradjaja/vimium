@@ -1,12 +1,31 @@
+hasAncestorWithId = (element, id) ->
+  while element.parentElement
+    if element.parentElement.id == id
+      return true
+    element = element.parentElement
+  false
+
+
+# Returns true if should bubble to site's esc handler.
+# Returns false if should let Vimium do its thing (blur if focusable, ...)
 bubbleWhitelistContains = (activeElement) ->
+  # TODO Check domain
+
   # Slack --------------------------------------------------------------------
+  # - Should return true for "find a channel/DM/etc" input
+  # - Should return false for "type a message" input
   isQlEditor = activeElement.classList.contains('ql-editor')
-  isNotMsgInput = activeElement.parentElement.id != 'msg_input'
-  if isQlEditor and isNotMsgInput
-    # ql-editor is a class shared by both the 'type a message' box and the
-    # 'find a channel/dm/etc' box we only want to continue bubbling for the
-    # latter. for the former, we want vimium to unfocus the box so that the
-    # user can activate link hints mode with f (or whatever key)
+  isMsgInput = hasAncestorWithId(activeElement, 'msg_input')
+  if isQlEditor and not isMsgInput
+    return true
+
+  # Facebook -----------------------------------------------------------------
+  # - Should return true for chat input, new post input
+  # - Should return false for comment input
+  isNoTranslate = activeElement.classList.contains('notranslate')
+  isChat = hasAncestorWithId(activeElement, 'ChatTabsPagelet')
+  isNewPost = hasAncestorWithId(activeElement, 'pagelet_composer')
+  if isNoTranslate and (isChat or isNewPost)
     return true
 
   false
