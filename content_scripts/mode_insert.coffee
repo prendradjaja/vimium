@@ -28,6 +28,11 @@ shouldContinueBubbling = (activeElement) ->
   if isNoTranslate and (isChat or isNewPost)
     return true
 
+  # Google Sheets ------------------------------------------------------------
+  isCellInput = activeElement.classList.contains('cell-input')
+  if isCellInput
+    return true
+
   # (add more site-specific rules here)
 
   false
