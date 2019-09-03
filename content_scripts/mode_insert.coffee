@@ -19,6 +19,10 @@ shouldContinueBubbling = (activeElement) ->
   if isQlEditor and not isMsgInput
     return true
 
+  isEmojiInput = activeElement.classList.contains('p-emoji_picker__input')
+  if isEmojiInput
+    return true
+
   # Facebook -----------------------------------------------------------------
   # - Should return true for chat input, new post input
   # - Should return false for comment input
