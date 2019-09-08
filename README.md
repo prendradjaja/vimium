@@ -43,8 +43,9 @@ more discussion of this by searching Vimium's issues for e.g. "escape",
 
 ## Changelog
 
+- v0.1.6: Add Google Sheets search rule (might overlap with Docs etc?)
 - v0.1.5: Add Slack emoji rule
-- v0.1.4: Add Google Sheets rule
+- v0.1.4: Add Google Sheets cell rule
 - v0.1.3: Rename `bubbleWhitelistContains` -> `shouldContinueBubbling`.
 - v0.1.2: Add Facebook rule, refactor Slack rule.
 - v0.1.1: Refactor to make it easier to use this fix for other places & sites.

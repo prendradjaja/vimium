@@ -37,6 +37,10 @@ shouldContinueBubbling = (activeElement) ->
   if isCellInput
     return true
 
+  isSearchInput = activeElement.classList.contains('docs-findinput-input')
+  if isSearchInput
+    return true
+
   # (add more site-specific rules here)
 
   false
